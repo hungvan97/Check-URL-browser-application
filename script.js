@@ -1,16 +1,32 @@
+import file_extension from './public/file_extensions.json' with {type: 'json'};
 document.addEventListener('DOMContentLoaded', function () {
     const urlInput = document.getElementById('urlInput');
     const urlResult = document.getElementById('urlResult');
-    const file_extension_list = new Set([".html", ".jpg", ".png", ".txt"]);
+    const file_extension_list = file_extension.file_extension_list;
+    // const file_extension = new Set([
+    //     ".html",
+    //     ".css",
+    //     ".js",
+    //     ".xml",
+    //     ".png",
+    //     ".jpg",
+    //     ".gif",
+    //     ".xap",
+    //     ".xslt",
+    //     ".ico",
+    //     ".svg",
+    //     ".resx"
+    // ]);
     let typingStatus = document.getElementById('typingStatus');
 
     let timeout = null;
-    const throttleInterval = 2000; // 2s client request to server delay
+    const throttleInterval = 1000; // 1s client request to server delay
 
     /* Event listener for input event on URL input field */
     urlInput.addEventListener('input', function() {
         // Show typing status
-        typingStatus.textContent = 'Typing...'; typingStatus.style.fontStyle = 'italic';
+        typingStatus.style.fontWeight = 'normal'; typingStatus.style.fontStyle = 'italic';
+        typingStatus.textContent = 'Typing...'; 
 
         // Clear result
         urlResult.textContent = '';
@@ -26,7 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 urlResult.textContent = 'Invalid URL format';
             }
             
-            typingStatus.textContent = 'Result'; typingStatus.style.fontStyle = 'normal'; typingStatus.style.fontWeight = 'bold';
+            typingStatus.style.fontWeight = 'bold'; typingStatus.style.fontStyle = 'normal'; 
+            typingStatus.textContent = 'Result'; 
         }, throttleInterval); 
     });
 
@@ -42,10 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // check if URL exists
         try {
-            const response = await fetch(url, { method: 'HEAD' });
-        } catch (no_response) {
-            exit = false;
-            return {exit, type};
+            let response = await fetch(url, { method: 'HEAD' });
+            if(response.status !== 200) {
+                exit = false;
+                return {exit, type};
+            }
+        } catch (e) {
         }
 
         // check if URL is file or folder
