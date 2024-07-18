@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let timeout = null;
     const throttleInterval = 2000; // 2s client request to server delay
 
+    /* Event listener for input event on URL input field */
     urlInput.addEventListener('input', function() {
         // Show typing status
         typingStatus.textContent = 'Typing...'; typingStatus.style.fontStyle = 'italic';
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = urlInput.value;
             const pattern = /^(?:(?:https?|s?ftp):\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*$/i;
             if (!!pattern.test(url)) {
-                await checkUrlExistence(url);
+                await interpretateUrl(url);
             } else {
                 urlResult.textContent = 'Invalid URL format';
             }
@@ -29,26 +30,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }, throttleInterval); 
     });
 
-    async function checkUrlExistence(url) {
-        // Mocking server response with a delay
-        const url_interpretation = await checkUrl(url);
-        urlResult.innerHTML = `<p>URL exists: True</p><p>Type: ${url_interpretation.type}</p>`;
+    /* Asynchronous server call to provide information if it exits and if it a file or a folder */
+    async function interpretateUrl(url) {
+        const url_check = await checkTypeUrl(url);
+        urlResult.innerHTML = `<p>URL exists: ${url_check.exit}</p><p>Type: ${url_check.type}</p>`;
     }
 
-    async function checkUrl(url) {
-        // Simple mock server logic for demonstration purposes
+    async function checkTypeUrl(url) {
+        let exit = true;
+        let type = 'not file nor folder';
+        
+        // check if URL exists
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+        } catch (no_response) {
+            exit = false;
+            return {exit, type};
+        }
+
+        // check if URL is file or folder
         if (url.endsWith('/')){ 
-            return { exists: true, type: 'folder' };
+            type = 'folder';
         } else {
             for (const ext of file_extension_list) {
                 if (url.endsWith(ext)) {
-                    return { exists: true, type: 'file' };
+                    type = 'file';
                 }
             }
         }
-        return { exists: false, type: 'not file nor folder' };
+        return {exit, type};
     }
 });
-
-// implementation server hangs up after 3s
-// creat JSON list of file_extension_list
