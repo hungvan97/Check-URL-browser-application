@@ -1,4 +1,8 @@
 # Change log
+## [v1.1.2]
+**Implemented enhancement**
+- Seperate the script for checking valid format and interpretating URL in each script file
+- Rename some function's names to fit its behavior
 ## [v1.1.1]
 **Implemented enhancement**
 - List of file extensions now is public resources, rather than fix variable

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "simple browser application in Javascript to check the existence of URL",
   "main": "script.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
