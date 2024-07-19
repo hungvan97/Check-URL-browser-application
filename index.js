@@ -38,6 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Asynchronous server call to provide information if it exits and if it a file or a folder */
     async function callServer(url) {
         const url_check = await interpretateUrl(url, file_extension_list);
-        urlResult.innerHTML = `<p>URL exists: ${url_check.exit}</p><p>Type: ${url_check.type}</p>`;
+        urlResult.innerHTML = `<p>URL exists: ${url_check.exist}</p><p>Type: ${url_check.type}</p>`;
     }
 });

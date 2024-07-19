@@ -1,22 +1,22 @@
 /* This script implement URL logic check  */ 
 async function interpretateUrl(url, file_extension_list) {
-    let exit = null;
+    let exist = null;
     let type = 'not file nor folder';
     
     // check if URL exists
     try {
         let response = await fetch(url, { method: 'HEAD' , redirect: 'manual'});
         if (response.status === 200) {
-            exit = true;
+            exist = true;
         }
         if (response.status === 404) {
-            exit = 'false';
+            exist = 'false';
         }
     } catch (e) {
       // pass handle error
-      exit = false; 
+      exist = false; 
       type = "unknown";
-      return {exit, type};
+      return {exist, type};
     }
 
     // check if URL is file or folder in case URL exists
@@ -29,7 +29,7 @@ async function interpretateUrl(url, file_extension_list) {
             }
         }
     }
-    return {exit, type};
+    return {exist, type};
 }
 
 export { interpretateUrl };
